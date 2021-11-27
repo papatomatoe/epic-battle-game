@@ -1,63 +1,76 @@
-const attackButton = document.querySelector(".btn--attack");
-const healButton = document.querySelector(".btn--heal");
-const monsterHealthDisplay = document.querySelector(".card--monster p");
-const heroHealthDisplay = document.querySelector(".card--hero p");
-const container = document.querySelector(".container");
-const resultDisplay = document.querySelector(".card--result");
-const gameResult = resultDisplay.querySelector("p");
+"use strict";
 
-const MAX_HEALTH = 100;
-const MAX_ATTACK = 10;
-const MAX_HEAL = 20;
+const gameDisplay = document.querySelector(".container");
+const attackButton = gameDisplay.querySelector(".btn--attack");
+const healButton = gameDisplay.querySelector(".btn--heal");
+const monsterHealthDisplay = gameDisplay.querySelector(".card--monster p");
+const heroHealthDisplay = gameDisplay.querySelector(".card--hero p");
+const resultDisplay = document.querySelector(".card--result");
+const resultDisplayText = resultDisplay.querySelector("p");
 
 const RESULT = {
-  lose: "you lost",
   win: "you win",
+  lost: "you lost",
 };
 
-let monsterHealth = MAX_HEALTH;
-let heroHealth = MAX_HEALTH;
+const RANDOM_ATTACK_MAX_VALUE = 20;
+const RANDOM_HEAL_MAX_VALUE = 30;
 
-const displayHealth = () => {
-  monsterHealthDisplay.innerText = monsterHealth;
-  heroHealthDisplay.innerText = heroHealth;
+const HIDE_CLASS = "hide";
+
+const MONSTER_HEALTH = 100;
+const HERO_HEALTH = 100;
+
+let monsterHealthValue;
+let heroHealthValue;
+
+const startGame = () => {
+  monsterHealthValue = MONSTER_HEALTH;
+  heroHealthValue = HERO_HEALTH;
+
+  monsterHealthDisplay.innerText = MONSTER_HEALTH;
+  heroHealthDisplay.innerText = HERO_HEALTH;
+
+  attackButton.addEventListener("click", heroAttack);
+
+  healButton.addEventListener("click", heroHeal);
 };
 
-const attackTo = (personageHealth) => {
-  return (personageHealth -= Math.floor(Math.random() * MAX_ATTACK));
-};
+const getRandomPoint = (maxRandomValue) =>
+  Math.floor(Math.random() * maxRandomValue);
 
-const heal = () => (heroHealth += Math.floor(Math.random() * MAX_HEAL));
+const getGameResult = () => (heroHealthValue > 0 ? RESULT.win : RESULT.lost);
 
-const checkGame = (heroHealth, monsterHealth) => {
-  let result;
+const checkGame = () => {
+  if (monsterHealthValue <= 0 || heroHealthValue <= 0) {
+    attackButton.removeEventListener("click", heroAttack);
+    healButton.removeEventListener("click", heroHeal);
 
-  const isMonsterDead = monsterHealth <= 0;
-  const isHeroDead = heroHealth <= 0;
+    resultDisplay.classList.remove(HIDE_CLASS);
+    gameDisplay.classList.add(HIDE_CLASS);
 
-  if (isMonsterDead || isHeroDead) {
-    result = isHeroDead ? RESULT.lose : RESULT.win;
-
-    container.classList.add("hide");
-    resultDisplay.classList.remove("hide");
-    gameResult.innerText = result;
+    resultDisplayText.innerText = getGameResult();
   }
 };
 
-const attackHandler = () => {
-  monsterHealth = attackTo(monsterHealth);
-  heroHealth = attackTo(heroHealth);
-  displayHealth();
-  checkGame(heroHealth, monsterHealth);
+const monsterAttack = () => {
+  heroHealthValue -= getRandomPoint(RANDOM_ATTACK_MAX_VALUE);
+  checkGame();
+  heroHealthDisplay.innerText = heroHealthValue;
 };
 
-const healHandler = () => {
-  heroHealth = heal();
-  if (heroHealth > MAX_HEALTH) heroHealth = MAX_HEALTH;
-  heroHealth = attackTo(heroHealth);
-  displayHealth();
-  checkGame(heroHealth, monsterHealth);
+const heroAttack = () => {
+  monsterHealthValue -= getRandomPoint(RANDOM_ATTACK_MAX_VALUE);
+  checkGame();
+  monsterHealthDisplay.innerText = monsterHealthValue;
+  monsterAttack();
 };
 
-attackButton.addEventListener("click", attackHandler);
-healButton.addEventListener("click", healHandler);
+const heroHeal = () => {
+  heroHealthValue += getRandomPoint(RANDOM_HEAL_MAX_VALUE);
+  if (heroHealthValue > HERO_HEALTH) heroHealthValue = HERO_HEALTH;
+  heroHealthDisplay.innerText = heroHealthValue;
+  monsterAttack();
+};
+
+startGame();
