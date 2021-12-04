@@ -14,7 +14,11 @@ body {
 body {
   min-width: 375px;
   font-family: Arial, Helvetica, sans-serif;
-  background-image: linear-gradient(180deg, rgb(0, 255, 251), rgb(111, 10, 124));
+  background-image: linear-gradient(
+    180deg,
+    rgb(0, 255, 251),
+    rgb(111, 10, 124)
+  );
 }
 
 ul,
@@ -71,7 +75,10 @@ input {
   text-align: center;
   font-size: 32px;
   color: whitesmoke;
+}
 
+.card--start {
+  min-height: 300px;
 }
 
 .btn {
@@ -94,6 +101,10 @@ input {
 
 .btn:active {
   color: rgba(255, 255, 255, 0.5);
+}
+
+.btn--start {
+  margin: 0 auto;
 }
 
 .hide {

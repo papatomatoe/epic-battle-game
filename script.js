@@ -7,6 +7,10 @@ const monsterHealthDisplay = gameDisplay.querySelector(".card--monster p");
 const heroHealthDisplay = gameDisplay.querySelector(".card--hero p");
 const resultDisplay = document.querySelector(".card--result");
 const resultDisplayText = resultDisplay.querySelector("p");
+const restartButton = resultDisplay.querySelector(".btn--restart");
+
+const startDisplay = document.querySelector(".card--start");
+const startButton = startDisplay.querySelector(".btn--start");
 
 const RESULT = {
   win: "you win",
@@ -34,6 +38,13 @@ const startGame = () => {
   attackButton.addEventListener("click", heroAttack);
 
   healButton.addEventListener("click", heroHeal);
+
+  startButton.removeEventListener("click", globalStartGame);
+};
+
+const restartGame = () => {
+  startGame();
+  restartButton.removeEventListener("click", globalRestartGame);
 };
 
 const getRandomPoint = (maxRandomValue) =>
@@ -46,8 +57,10 @@ const checkGame = () => {
     attackButton.removeEventListener("click", heroAttack);
     healButton.removeEventListener("click", heroHeal);
 
-    resultDisplay.classList.remove(HIDE_CLASS);
     gameDisplay.classList.add(HIDE_CLASS);
+    resultDisplay.classList.remove(HIDE_CLASS);
+
+    restartButton.addEventListener("click", globalRestartGame);
 
     resultDisplayText.innerText = getGameResult();
   }
@@ -73,4 +86,16 @@ const heroHeal = () => {
   monsterAttack();
 };
 
-startGame();
+const globalStartGame = () => {
+  gameDisplay.classList.remove(HIDE_CLASS);
+  startDisplay.classList.add(HIDE_CLASS);
+  startGame();
+};
+
+const globalRestartGame = () => {
+  gameDisplay.classList.remove(HIDE_CLASS);
+  resultDisplay.classList.add(HIDE_CLASS);
+  restartGame();
+};
+
+startButton.addEventListener("click", globalStartGame);

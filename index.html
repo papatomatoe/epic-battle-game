@@ -11,12 +11,16 @@
 
 <body>
   <h1 class="page-title">Epic Battle</h1>
-  <div class="container">
+
+  <section class="card card--start">
+    <button class="btn btn--start">Start</button>
+  </section>
+
+  <div class="container hide">
     <section class="card card--monster">
       <h2>Monster health:</h2>
       <p>100</p>
     </section>
-
     <section class="card  card--hero">
       <h2>Hero health:</h2>
       <p>100</p>
@@ -26,9 +30,11 @@
       <button class="btn btn--heal" type="button">Heal</button>
     </section>
   </div>
+
   <section class="card card--result hide">
     <h2>Game over!</h2>
     <p>result</p>
+    <button class="btn btn--restart">Restart</button>
   </section>
 
   <script src="script.js"></script>
